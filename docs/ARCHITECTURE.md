@@ -159,7 +159,8 @@ ThePlatform/
 | 7 | Switch to **live Claude** | Real AI answers; costs a few cents per task |
 | 8 | Error handling polish + basic automated tests | Simulate failures, see friendly errors |
 
-Phase 2 (later): login & billing, hosted database, remaining 7 agents, integrations
+Phase 2 (later): login & billing (including cross-site request protection on the
+app's save addresses under `/api`), hosted database, remaining 7 agents, integrations
 (Google Analytics, email, social, CRM), scheduled/recurring automations.
 
 ## 7. What you need to install / set up

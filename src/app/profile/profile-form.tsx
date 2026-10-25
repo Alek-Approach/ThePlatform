@@ -1,13 +1,47 @@
 "use client";
 
 import { useActionState } from "react";
-import { PROFILE_SECTIONS, type ProfileInput } from "@/lib/profile";
-import { saveProfile, type SaveProfileState } from "./actions";
+import { useRouter } from "next/navigation";
+import { PROFILE_FIELD_NAMES, PROFILE_SECTIONS, type ProfileInput } from "@/lib/profile";
+import type { SaveProfileResult } from "@/lib/profile-service";
+
+type SaveProfileState = {
+  status: "idle" | "saved" | "error";
+  message?: string;
+  fieldErrors?: Partial<Record<keyof ProfileInput, string>>;
+  values?: ProfileInput;
+  savedAt?: number;
+};
 
 const inputClass =
   "mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm shadow-sm outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:border-zinc-700 dark:bg-zinc-900 dark:focus:ring-indigo-900";
 
 export function ProfileForm({ initial }: { initial: ProfileInput }) {
+  const router = useRouter();
+
+  // Sends the form to the app's save address (/api/profile) and reports back.
+  async function saveProfile(_prev: SaveProfileState, formData: FormData): Promise<SaveProfileState> {
+    const values = Object.fromEntries(
+      PROFILE_FIELD_NAMES.map((key) => [key, String(formData.get(key) ?? "")]),
+    ) as ProfileInput;
+
+    try {
+      const response = await fetch("/api/profile", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
+      const result = (await response.json()) as SaveProfileResult;
+      if (!result.ok) {
+        return { status: "error", message: result.message, fieldErrors: result.fieldErrors, values };
+      }
+      router.refresh(); // update the dashboard and menu with the new details
+      return { status: "saved", message: "Profile saved.", values: result.profile, savedAt: Date.now() };
+    } catch {
+      return { status: "error", message: "Couldn't reach the app to save. Check that it's running and try again.", values };
+    }
+  }
+
   const [state, formAction, pending] = useActionState<SaveProfileState, FormData>(saveProfile, {
     status: "idle",
     values: initial,

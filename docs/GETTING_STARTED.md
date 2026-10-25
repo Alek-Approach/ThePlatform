@@ -70,6 +70,6 @@ Your work is kept; just reopen it from the same page next time.
 | `npm: command not found` | Setup isn't finished — wait a minute and try again. |
 | `Cannot find module …` | Type `npm install`, press Enter, then `npm run dev` again. |
 | Browser shows "502" or blank | Wait 10 seconds and refresh — the app is still starting. |
-| "Invalid Server Actions request" when saving | Get the latest update (see above). When `npm run dev` starts you should see "✓ Codespaces detected". |
+| "Invalid Server Actions request" when saving | You have an older version — get the latest update (see above). |
 | `git pull` says "Your local changes would be overwritten" | Type `git checkout -- .` then `git pull` again. |
 | Anything else | Copy the red error text and paste it to Claude. |
