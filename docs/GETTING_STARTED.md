@@ -80,4 +80,5 @@ Your work is kept; just reopen it from the same page next time.
 | Browser shows "502" or blank | Wait 10 seconds and refresh — the app is still starting. |
 | "Invalid Server Actions request" when saving | You have an older version — get the latest update (see above). |
 | `git pull` says "Your local changes would be overwritten" | Type `git checkout -- .` then `git pull` again. |
+| `Cannot read properties of undefined (reading 'findMany')` | Stop the app (Ctrl + C), get the latest update, and run `npm run dev` again. |
 | Anything else | Copy the red error text and paste it to Claude. |
