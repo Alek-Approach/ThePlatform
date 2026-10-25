@@ -1,0 +1,15 @@
+{
+  // GitHub Codespaces setup: a ready-made computer with Node.js installed.
+  "name": "ThePlatform",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
+  "postCreateCommand": "npm install",
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": { "label": "ThePlatform dashboard", "onAutoForward": "openBrowser" }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "bradlc.vscode-tailwindcss", "Prisma.prisma"]
+    }
+  }
+}
