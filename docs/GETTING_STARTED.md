@@ -37,12 +37,14 @@ your Codespace:
    and press **Enter** after each:
 
    ```
+   git checkout -- .
    git pull
    npm install
    npm run dev
    ```
 
-`git pull` downloads the new version, `npm install` adds any new building blocks, and
+`git checkout -- .` clears small automatic changes in the Codespace that can block an
+update (your saved business data is not affected), `git pull` downloads the new version, `npm install` adds any new building blocks, and
 `npm run dev` starts the app (it also updates your database automatically).
 
 ## Step 1 — Company profile
@@ -68,5 +70,6 @@ Your work is kept; just reopen it from the same page next time.
 | `npm: command not found` | Setup isn't finished — wait a minute and try again. |
 | `Cannot find module …` | Type `npm install`, press Enter, then `npm run dev` again. |
 | Browser shows "502" or blank | Wait 10 seconds and refresh — the app is still starting. |
-| "Invalid Server Actions request" when saving | Get the latest update (`git pull`), then restart the app with `npm run dev`. |
+| "Invalid Server Actions request" when saving | Get the latest update (see above). When `npm run dev` starts you should see "✓ Codespaces detected". |
+| `git pull` says "Your local changes would be overwritten" | Type `git checkout -- .` then `git pull` again. |
 | Anything else | Copy the red error text and paste it to Claude. |
