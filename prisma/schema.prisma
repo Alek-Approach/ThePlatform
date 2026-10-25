@@ -33,6 +33,7 @@ model Workspace {
   brandVoice       String @default("")
 
   agentActivations AgentActivation[]
+  tasks            Task[]
 }
 
 // Which agents a workspace has switched on. Agents themselves are defined in
@@ -46,4 +47,26 @@ model AgentActivation {
   updatedAt   DateTime  @updatedAt
 
   @@unique([workspaceId, agentId])
+}
+
+// A piece of work given to an agent, and its result.
+model Task {
+  id            String    @id @default(cuid())
+  workspaceId   String
+  workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  completedAt   DateTime?
+
+  prompt        String // what the owner asked, in their own words
+  agentId       String // which agent does the work
+  routing       String // "auto" (ThePlatform chose) or "manual" (owner chose)
+  routingReason String  @default("")
+  status        String  @default("queued") // queued, running, completed, failed
+  aiMode        String  @default("mock") // mock or live — which AI produced the result
+
+  summary       String  @default("") // one or two sentences
+  output        String  @default("") // the full result (formatted text)
+  error         String  @default("") // friendly explanation when status = failed
+
+  @@index([workspaceId, createdAt])
 }

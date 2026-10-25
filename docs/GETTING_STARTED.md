@@ -67,6 +67,24 @@ Your data is stored in a small database file inside your Codespace
 4. Refresh the page → your choices are remembered.
 5. Click **Dashboard** → the AI team section shows which agents are active.
 
+## Step 3 — Give your agents tasks (mock mode)
+1. Get the update (see above) and open the app. Make sure at least one agent is
+   switched on in **AI team**.
+2. Click **Tasks**. Type a task in your own words, or click one of the suggestion
+   buttons, then click **Give task**.
+3. You'll see "Working…" for a moment, then the result. The line under the title
+   says which agent did it and *why ThePlatform chose it*.
+4. Try tasks for different agents, for example:
+   - "Who are my competitors?" → Market Research Agent
+   - "Write an email newsletter" → Marketing Agent
+   - "Should we raise our prices?" → Business Strategy Agent
+5. Try **Assign to** to pick an agent yourself.
+6. To see how errors are handled, give a task containing the word **[fail]**. It
+   shows a friendly "This task didn't finish" message instead of crashing.
+
+Results are *sample answers* (mock mode). They use your profile details but are not
+real AI yet. That comes in Step 7, and costs nothing until then.
+
 ## Saving money on Codespaces
 GitHub gives free monthly hours. A Codespace stops automatically after 30 minutes of
 inactivity. You can also stop it at **github.com/codespaces** → `…` → **Stop codespace**.

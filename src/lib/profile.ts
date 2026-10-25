@@ -104,3 +104,8 @@ export function profileCompleteness(profile: ProfileInput): number {
   const filled = PROFILE_FIELD_NAMES.filter((key) => profile[key].trim() !== "").length;
   return Math.round((filled / PROFILE_FIELD_NAMES.length) * 100);
 }
+
+// Picks the profile fields out of a stored workspace record.
+export function toProfile(workspace: Record<keyof ProfileInput, string>): ProfileInput {
+  return Object.fromEntries(PROFILE_FIELD_NAMES.map((key) => [key, workspace[key]])) as ProfileInput;
+}

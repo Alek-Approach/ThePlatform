@@ -1,14 +1,13 @@
 import { Suspense } from "react";
 import { getCurrentWorkspace } from "@/lib/workspace";
-import { PROFILE_FIELD_NAMES, type ProfileInput } from "@/lib/profile";
+import { toProfile } from "@/lib/profile";
 import { ProfileForm } from "./profile-form";
 
 export const metadata = { title: "Company profile · ThePlatform" };
 
 async function LoadedProfileForm() {
   const workspace = await getCurrentWorkspace();
-  const initial = Object.fromEntries(PROFILE_FIELD_NAMES.map((key) => [key, workspace[key]])) as ProfileInput;
-  return <ProfileForm initial={initial} />;
+  return <ProfileForm initial={toProfile(workspace)} />;
 }
 
 export default function ProfilePage() {

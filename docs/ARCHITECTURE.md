@@ -124,8 +124,7 @@ folder. When we add login, a user is linked to their workspace(s).
 | Workspace | one customer business (name, industry, audience, goals, …) |
 | Document | uploaded file name, extracted text, owner workspace |
 | AgentActivation | which agents are switched on for a workspace |
-| Task | the natural-language request, assigned agent, status, parent task (for hand-offs) |
-| Result | the agent's output for a task (summary + full report) |
+| Task | the natural-language request, assigned agent, why it was chosen, status, and the result (summary + full report) |
 | ProposedAction | action an agent suggests, status pending/approved/rejected |
 | ActivityLog | timestamped event history |
 

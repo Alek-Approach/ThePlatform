@@ -3,6 +3,9 @@ import { Suspense } from "react";
 import { getCurrentWorkspace } from "@/lib/workspace";
 import { profileCompleteness } from "@/lib/profile";
 import { getTeam } from "@/lib/agents-service";
+import { listTasks } from "@/lib/tasks-service";
+import { getAgent } from "@/agents/registry";
+import { TaskStatus } from "@/components/task-status";
 
 async function ProfileCard() {
   const workspace = await getCurrentWorkspace();
@@ -80,6 +83,37 @@ async function TeamSummary() {
   );
 }
 
+async function RecentTasks() {
+  const workspace = await getCurrentWorkspace();
+  const tasks = await listTasks(workspace.id, 5);
+
+  return (
+    <section className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">Recent tasks</h2>
+        <Link href="/tasks" className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
+          Give a task
+        </Link>
+      </div>
+      {tasks.length === 0 ? (
+        <p className="text-sm text-zinc-500">No tasks yet.</p>
+      ) : (
+        <ul className="divide-y divide-zinc-100 rounded-xl border border-zinc-200 bg-white shadow-sm dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900">
+          {tasks.map((task) => (
+            <li key={task.id}>
+              <Link href={`/tasks/${task.id}`} className="flex items-center gap-3 p-4 text-sm hover:bg-zinc-50 dark:hover:bg-zinc-800/50">
+                <span aria-hidden>{getAgent(task.agentId)?.icon ?? "🤖"}</span>
+                <span className="min-w-0 flex-1 truncate">{task.prompt}</span>
+                <TaskStatus status={task.status} />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-8">
@@ -94,6 +128,10 @@ export default function Home() {
 
       <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900" />}>
         <TeamSummary />
+      </Suspense>
+
+      <Suspense fallback={<div className="h-32 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900" />}>
+        <RecentTasks />
       </Suspense>
     </div>
   );
