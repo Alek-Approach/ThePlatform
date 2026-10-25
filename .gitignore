@@ -42,3 +42,9 @@ next-env.d.ts
 
 # keep the settings template (contains no secrets)
 !.env.example
+
+/src/generated/prisma
+
+# local database file
+/prisma/*.db
+/prisma/*.db-journal

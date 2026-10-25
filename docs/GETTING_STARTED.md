@@ -28,6 +28,35 @@ ThePlatform needs. You don't install anything.
 
 To stop the app: click in the terminal and press **Ctrl + C**.
 
+## Getting new updates into your Codespace
+Whenever Claude finishes a step, it saves the new version to GitHub. To pull it into
+your Codespace:
+
+1. Open your Codespace (github.com/codespaces → click it).
+2. In the terminal, stop the app if it's running (**Ctrl + C**), then type each line
+   and press **Enter** after each:
+
+   ```
+   git pull
+   npm install
+   npm run dev
+   ```
+
+`git pull` downloads the new version, `npm install` adds any new building blocks, and
+`npm run dev` starts the app (it also updates your database automatically).
+
+## Step 1 — Company profile
+1. Get the update (see above) and open the app in your browser.
+2. Click **Company profile** in the left menu.
+3. Try clicking **Save profile** with an empty company name → you should see a red
+   message asking for it.
+4. Fill in your company details and click **Save profile** → "✓ Profile saved."
+5. Refresh the page (or stop and restart the app) → your details are still there.
+6. Click **Dashboard** → your company name and a "profile completeness" bar appear.
+
+Your data is stored in a small database file inside your Codespace
+(`prisma/dev.db`). It is *not* uploaded to GitHub, so your business details stay private.
+
 ## Saving money on Codespaces
 GitHub gives free monthly hours. A Codespace stops automatically after 30 minutes of
 inactivity. You can also stop it at **github.com/codespaces** → `…` → **Stop codespace**.

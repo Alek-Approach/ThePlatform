@@ -2,7 +2,7 @@
   // GitHub Codespaces setup: a ready-made computer with Node.js installed.
   "name": "ThePlatform",
   "image": "mcr.microsoft.com/devcontainers/typescript-node:22",
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm install && npx prisma migrate deploy",
   "forwardPorts": [3000],
   "portsAttributes": {
     "3000": { "label": "ThePlatform dashboard", "onAutoForward": "openBrowser" }
