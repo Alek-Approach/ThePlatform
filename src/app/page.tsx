@@ -2,12 +2,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { getCurrentWorkspace } from "@/lib/workspace";
 import { profileCompleteness } from "@/lib/profile";
-
-const agents = [
-  { name: "Market Research Agent", role: "Studies your market, customers and competitors." },
-  { name: "Marketing Agent", role: "Plans campaigns, content and messaging." },
-  { name: "Business Strategy Agent", role: "Turns insights into goals, plans and priorities." },
-];
+import { getTeam } from "@/lib/agents-service";
 
 async function ProfileCard() {
   const workspace = await getCurrentWorkspace();
@@ -45,6 +40,46 @@ async function ProfileCard() {
   );
 }
 
+async function TeamSummary() {
+  const workspace = await getCurrentWorkspace();
+  const team = await getTeam(workspace.id);
+
+  return (
+    <section className="flex flex-col gap-3">
+      <div className="flex items-center justify-between">
+        <h2 className="text-lg font-semibold">AI team</h2>
+        <Link href="/team" className="text-sm font-medium text-indigo-600 hover:underline">
+          Manage team →
+        </Link>
+      </div>
+      <div className="grid gap-4 sm:grid-cols-3">
+        {team.map(({ agent, active }) => (
+          <Link
+            key={agent.id}
+            href="/team"
+            className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm hover:border-indigo-300 dark:border-zinc-800 dark:bg-zinc-900"
+          >
+            <span className="text-2xl" aria-hidden>
+              {agent.icon}
+            </span>
+            <h3 className="mt-2 font-semibold">{agent.name}</h3>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">{agent.tagline}</p>
+            <span
+              className={`mt-4 inline-block rounded-full px-3 py-1 text-xs font-medium ${
+                active
+                  ? "bg-green-100 text-green-800 dark:bg-green-950 dark:text-green-300"
+                  : "bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+              }`}
+            >
+              {active ? "● Active" : "Off"}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-8">
@@ -57,20 +92,9 @@ export default function Home() {
         <ProfileCard />
       </Suspense>
 
-      <section className="grid gap-4 sm:grid-cols-3">
-        {agents.map((agent) => (
-          <div
-            key={agent.name}
-            className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900"
-          >
-            <h2 className="font-semibold">{agent.name}</h2>
-            <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{agent.role}</p>
-            <span className="mt-4 inline-block rounded-full bg-zinc-100 px-3 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-              Coming in Step 2
-            </span>
-          </div>
-        ))}
-      </section>
+      <Suspense fallback={<div className="h-40 animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900" />}>
+        <TeamSummary />
+      </Suspense>
     </div>
   );
 }

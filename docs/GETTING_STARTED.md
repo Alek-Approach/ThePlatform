@@ -59,6 +59,14 @@ update (your saved business data is not affected), `git pull` downloads the new 
 Your data is stored in a small database file inside your Codespace
 (`prisma/dev.db`). It is *not* uploaded to GitHub, so your business details stay private.
 
+## Step 2 — Your AI team
+1. Get the update (see above) and open the app.
+2. Click **AI team** in the left menu. You'll see your three agents, all switched **Off**.
+3. Click the switch on one or two agents → they turn **Active** (purple), and the count at
+   the top updates.
+4. Refresh the page → your choices are remembered.
+5. Click **Dashboard** → the AI team section shows which agents are active.
+
 ## Saving money on Codespaces
 GitHub gives free monthly hours. A Codespace stops automatically after 30 minutes of
 inactivity. You can also stop it at **github.com/codespaces** → `…` → **Stop codespace**.

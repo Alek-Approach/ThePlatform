@@ -31,4 +31,19 @@ model Workspace {
   goals            String @default("")
   challenges       String @default("")
   brandVoice       String @default("")
+
+  agentActivations AgentActivation[]
+}
+
+// Which agents a workspace has switched on. Agents themselves are defined in
+// code (src/agents); this table only stores each business's on/off choice.
+model AgentActivation {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  agentId     String
+  active      Boolean   @default(false)
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workspaceId, agentId])
 }
