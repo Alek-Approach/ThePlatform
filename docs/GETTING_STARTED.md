@@ -68,4 +68,5 @@ Your work is kept; just reopen it from the same page next time.
 | `npm: command not found` | Setup isn't finished — wait a minute and try again. |
 | `Cannot find module …` | Type `npm install`, press Enter, then `npm run dev` again. |
 | Browser shows "502" or blank | Wait 10 seconds and refresh — the app is still starting. |
+| "Invalid Server Actions request" when saving | Get the latest update (`git pull`), then restart the app with `npm run dev`. |
 | Anything else | Copy the red error text and paste it to Claude. |
