@@ -9,6 +9,7 @@ import { getAgent } from "@/agents/registry";
 import { AutoRefresh } from "@/components/auto-refresh";
 import { LocalTime } from "@/components/local-time";
 import { TaskStatus, isPending } from "@/components/task-status";
+import { RetryButton } from "./retry-button";
 
 export const metadata = { title: "Task · ThePlatform" };
 
@@ -55,6 +56,7 @@ async function TaskDetail({ params }: { params: Promise<{ id: string }> }) {
       {task.status === "failed" && (
         <div className="rounded-xl border border-red-200 bg-red-50 p-5 text-sm text-red-900 dark:border-red-900 dark:bg-red-950 dark:text-red-200">
           <strong>This task didn&apos;t finish.</strong> {task.error}
+          <RetryButton taskId={task.id} />
         </div>
       )}
 

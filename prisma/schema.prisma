@@ -31,9 +31,19 @@ model Workspace {
   goals            String @default("")
   challenges       String @default("")
   brandVoice       String @default("")
+  valueProposition       String @default("")
+  competitivePositioning String @default("")
 
   agentActivations AgentActivation[]
   tasks            Task[]
+  documents        Document[]
+  knowledgeItems   KnowledgeItem[]
+  businessGoals    Goal[]
+  goalMeasurements GoalMeasurement[]
+  decisions        Decision[]
+  feedback         Feedback[]
+  activityEvents   ActivityEvent[]
+  aiCalls          AiCall[]
 }
 
 // Which agents a workspace has switched on. Agents themselves are defined in
@@ -55,6 +65,7 @@ model Task {
   workspaceId   String
   workspace     Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
   completedAt   DateTime?
 
   prompt        String // what the owner asked, in their own words
@@ -67,6 +78,171 @@ model Task {
   summary       String  @default("") // one or two sentences
   output        String  @default("") // the full result (formatted text)
   error         String  @default("") // friendly explanation when status = failed
+
+  @@index([workspaceId, createdAt])
+}
+
+// ─── Business Brain ──────────────────────────────────────────────────────────
+// "source" labels where information came from. Allowed values:
+//   verified          – confirmed by the founder (only the founder can set this)
+//   user              – typed or uploaded by the founder
+//   ai_recommendation – advice or plans produced by an agent
+//   assumption        – an estimate or guess (from an agent or the founder)
+//   outcome           – a measured result recorded by the founder
+
+// An uploaded file and its extracted text (upload screen arrives in Phase D).
+model Document {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  filename    String
+  mimeType    String    @default("")
+  sizeBytes   Int       @default(0)
+  text        String    @default("")
+  status      String    @default("active") // active, archived
+
+  knowledgeItems KnowledgeItem[]
+
+  @@index([workspaceId, createdAt])
+}
+
+// One piece of business knowledge: a competitor note, customer insight, policy,
+// research finding, lesson learned…
+model KnowledgeItem {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  kind        String // competitor, customer_insight, product, policy, research_finding, lesson, other
+  title       String
+  content     String
+  source      String // see the source labels above
+  status      String    @default("active") // active, archived
+  verifiedAt  DateTime?
+
+  // Where it came from (provenance), when known.
+  createdBy        String    @default("founder") // "founder" or an agent id
+  sourceTaskId     String?
+  sourceDocumentId String?
+  sourceDocument   Document? @relation(fields: [sourceDocumentId], references: [id], onDelete: SetNull)
+  goalId           String?
+  goal             Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+
+  @@index([workspaceId, status, kind])
+}
+
+// A measurable business objective.
+model Goal {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  title         String // e.g. "Acquire 100 customers in 90 days"
+  metric        String // e.g. "customers"
+  baselineValue Float    @default(0)
+  targetValue   Float
+  currentValue  Float    @default(0) // latest measurement (or the baseline)
+  deadline      DateTime?
+  status        String   @default("active") // active, achieved, missed, paused, archived
+  source        String   @default("user") // "user", or "ai_recommendation" for a suggested goal
+
+  measurements   GoalMeasurement[]
+  knowledgeItems KnowledgeItem[]
+  decisions      Decision[]
+
+  @@index([workspaceId, status])
+}
+
+// A recorded result for a goal (performance memory).
+model GoalMeasurement {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  goalId      String
+  goal        Goal      @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  recordedAt  DateTime  @default(now())
+  value       Float
+  note        String    @default("")
+  source      String    @default("outcome")
+
+  @@index([goalId, recordedAt])
+}
+
+// A significant decision by the founder (filled in by approvals in Phase D).
+model Decision {
+  id             String    @id @default(cuid())
+  workspaceId    String
+  workspace      Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt      DateTime  @default(now())
+
+  title          String // the proposed action
+  recommendation String    @default("") // what the agent recommended and why
+  agentId        String?
+  outcome        String // approved, rejected, revision_requested
+  explanation    String    @default("") // the founder's optional reason
+  taskId         String?
+  goalId         String?
+  goal           Goal?     @relation(fields: [goalId], references: [id], onDelete: SetNull)
+  active         Boolean   @default(true) // false = "no longer applies"
+  supersededAt   DateTime?
+
+  @@index([workspaceId, active, createdAt])
+}
+
+// The founder's rating of a result.
+model Feedback {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  taskId      String?
+  agentId     String?
+  rating      String // useful, not_useful, needs_improvement
+  note        String    @default("")
+
+  @@index([workspaceId, createdAt])
+}
+
+// ─── Observability ───────────────────────────────────────────────────────────
+
+// An auditable event, written in plain English.
+model ActivityEvent {
+  id          String    @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  type        String // e.g. "task.completed", "knowledge.verified"
+  actor       String // "founder", "system" or an agent id
+  message     String // plain-English description
+  entityType  String    @default("")
+  entityId    String    @default("")
+  details     String    @default("") // optional JSON with extra information
+
+  @@index([workspaceId, createdAt])
+}
+
+// One call to an AI model, for cost tracking and budgets (filled in from Phase C).
+model AiCall {
+  id           String    @id @default(cuid())
+  workspaceId  String
+  workspace    Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  createdAt    DateTime  @default(now())
+  taskId       String?
+  agentId      String?
+  purpose      String    @default("") // e.g. "agent", "routing", "review"
+  mode         String // mock or live
+  model        String    @default("")
+  inputTokens  Int       @default(0)
+  outputTokens Int       @default(0)
+  costUsd      Float     @default(0)
+  durationMs   Int       @default(0)
+  ok           Boolean   @default(true)
+  error        String    @default("")
 
   @@index([workspaceId, createdAt])
 }

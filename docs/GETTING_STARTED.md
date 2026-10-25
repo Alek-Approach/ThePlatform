@@ -85,6 +85,25 @@ Your data is stored in a small database file inside your Codespace
 Results are *sample answers* (mock mode). They use your profile details but are not
 real AI yet. That comes in Step 7, and costs nothing until then.
 
+## Phase A — Business Brain foundation
+1. Get the update (see above). `npm install` is needed this time.
+2. **Company profile**: two new questions, "Why do customers choose you?" and "How are
+   you different from competitors?".
+3. **Business Brain** (left menu): add a note about a competitor or customer. Choose
+   *"I know this"* or *"It's my best guess"*, and the note gets a coloured label. Click
+   **Mark as verified** to confirm it as a fact. Only you can do this. Try **Archive**
+   too; archived notes are hidden, never deleted.
+4. **Goals**: add a goal (e.g. *Generate 50 qualified leads*, measure *leads*, target
+   *50*). Record a result (e.g. *38*) and watch the progress bar. Record a result above
+   the target and the goal is marked **Achieved**.
+5. **Activity log**: everything you just did is listed in plain English.
+6. If a task ever gets stuck on "Working…" (for example, the app restarted), it is
+   marked as interrupted after 10 minutes and gets a **Retry** button.
+
+### Running the automated checks (optional)
+In the terminal type `npm test` and press Enter. You should see all tests "passed".
+They use a separate test database and never touch your real data.
+
 ## Saving money on Codespaces
 GitHub gives free monthly hours. A Codespace stops automatically after 30 minutes of
 inactivity. You can also stop it at **github.com/codespaces** → `…` → **Stop codespace**.

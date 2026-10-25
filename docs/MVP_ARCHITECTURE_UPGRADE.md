@@ -1,7 +1,6 @@
 # ThePlatform — MVP Architecture Upgrade
 
-*Status: proposal awaiting founder approval. Nothing in this document has been built yet
-unless it is listed under "What exists today".*
+*Status: design approved. **Phase A complete** (see §11). Phases B–F not started.*
 
 ---
 
@@ -465,3 +464,22 @@ What it will **not** do in the MVP: publish, send, or spend anything; connect to
 tools or analytics; run without the founder opening it; support multiple users or
 logins; guarantee that AI statements are true. It will clearly label which statements
 are verified and which are not.
+
+---
+
+## 11. Progress log
+
+### Phase A: Foundation & data ✅
+| Planned | Done | Notes |
+|---|---|---|
+| Test runner + first tests | ✅ | Vitest, separate `prisma/test.db`, 32 tests (`npm test`) |
+| Brain tables | ✅ | Document, KnowledgeItem, Goal, GoalMeasurement, Decision, Feedback, ActivityEvent, AiCall (additive migration; existing data preserved and verified) |
+| Source labels + "only the founder verifies" | ✅ | Enforced in `src/brain/knowledge.ts`, covered by tests |
+| 2 new profile fields | ✅ | Value proposition, competitive positioning |
+| Workspace isolation tests | ✅ | `tests/isolation.test.ts`: reads, writes and cross-links between two businesses |
+| Activity log | ✅ | Profile, agent switches, tasks (created/completed/failed/interrupted/retried), knowledge, goals |
+| Stuck-task fix | ✅ | Tasks with no progress for 10 min are marked interrupted; Retry button |
+| Simple pages | ✅ | Business Brain, Goals, Activity log |
+
+Not yet connected (by design, comes in later phases): agents don't read the Brain yet (B);
+Documents, Decisions, Feedback and AiCall tables exist but have no screens yet (C/D).

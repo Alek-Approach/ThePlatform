@@ -5,6 +5,7 @@ import { getAIProvider, FriendlyError } from "@/ai";
 import { getAgent } from "@/agents/registry";
 import { getTeam } from "@/lib/agents-service";
 import { toProfile } from "@/lib/profile";
+import { logActivity } from "./activity";
 
 // The orchestrator is ThePlatform's "manager": it checks a new task, decides which
 // agent should do it, records it, and later runs it and stores the result.
@@ -59,6 +60,13 @@ export async function submitTask(workspaceId: string, input: unknown): Promise<S
         aiMode: ai.mode,
       },
     });
+    await logActivity(workspaceId, {
+      type: "task.created",
+      actor: "founder",
+      message: `New task for the ${getAgent(chosen.agentId)?.name}: "${prompt.slice(0, 120)}". ${chosen.reason}`,
+      entityType: "task",
+      entityId: task.id,
+    });
     return { ok: true, taskId: task.id };
   } catch (error) {
     if (error instanceof FriendlyError) return { ok: false, message: error.message };
@@ -83,6 +91,13 @@ export async function runTask(taskId: string): Promise<void> {
       where: { id: taskId },
       data: { status: "completed", summary: result.summary, output: result.output, completedAt: new Date() },
     });
+    await logActivity(task.workspaceId, {
+      type: "task.completed",
+      actor: { agentId: agent.id },
+      message: `The ${agent.name} finished: "${task.prompt.slice(0, 120)}".`,
+      entityType: "task",
+      entityId: taskId,
+    });
   } catch (error) {
     console.error(`Task ${taskId} failed:`, error);
     const message =
@@ -90,5 +105,13 @@ export async function runTask(taskId: string): Promise<void> {
         ? error.message
         : "The agent ran into a problem and couldn't finish this task. Please try again in a moment.";
     await db.task.update({ where: { id: taskId }, data: { status: "failed", error: message, completedAt: new Date() } });
+    await logActivity(task.workspaceId, {
+      type: "task.failed",
+      actor: "system",
+      message: `A task didn't finish: "${task.prompt.slice(0, 120)}". ${message}`,
+      entityType: "task",
+      entityId: taskId,
+      details: { error: error instanceof Error ? error.message : String(error) },
+    });
   }
 }

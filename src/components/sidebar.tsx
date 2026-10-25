@@ -10,9 +10,10 @@ const NAV = [
   { href: "/profile", label: "Company profile" },
   { href: "/team", label: "AI team" },
   { href: "/tasks", label: "Tasks" },
-  { label: "Approvals", soon: "Step 5" },
-  { label: "Activity log", soon: "Step 5" },
-  { label: "Documents", soon: "Step 6" },
+  { href: "/goals", label: "Goals" },
+  { href: "/brain", label: "Business Brain" },
+  { label: "Approvals", soon: "Soon" },
+  { href: "/activity", label: "Activity log" },
 ];
 
 function isCurrent(href: string, pathname: string | null) {
@@ -38,7 +39,7 @@ function NavLinks({ pathname }: { pathname: string | null }) {
       <span
         key={item.label}
         className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-zinc-400"
-        title={`Coming in ${item.soon}`}
+        title="Coming in a later phase"
       >
         {item.label}
         <span className="text-[10px] uppercase tracking-wide">{item.soon}</span>

@@ -63,6 +63,8 @@ export const PROFILE_SECTIONS: { title: string; description: string; fields: Fie
       { name: "productsServices", label: "Main products or services (and prices, if you like)", kind: "textarea" },
       { name: "targetCustomers", label: "Who are your ideal customers?", kind: "textarea", placeholder: "Age, location, type of business, needs…" },
       { name: "competitors", label: "Main competitors", kind: "textarea", help: "Names or websites, one per line. Leave blank if unsure — the Research Agent can help." },
+      { name: "valueProposition", label: "Why do customers choose you? (value proposition)", kind: "textarea", placeholder: "The main benefit you deliver that others don't" },
+      { name: "competitivePositioning", label: "How are you different from competitors?", kind: "textarea", placeholder: "e.g. cheaper, faster, more personal, more specialised…" },
     ],
   },
   {
@@ -90,6 +92,8 @@ export const profileSchema = z.object({
   productsServices: text(3000),
   targetCustomers: text(3000),
   competitors: text(3000),
+  valueProposition: text(3000),
+  competitivePositioning: text(3000),
   goals: text(3000),
   challenges: text(3000),
   brandVoice: text(300),

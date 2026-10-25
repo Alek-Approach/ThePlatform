@@ -1,6 +1,7 @@
 import "server-only";
 import { db } from "@/lib/db";
 import { getCurrentWorkspace } from "@/lib/workspace";
+import { logActivity } from "@/core/activity";
 import { profileSchema, type ProfileInput } from "@/lib/profile";
 
 export type SaveProfileResult =
@@ -22,6 +23,7 @@ export async function saveCompanyProfile(input: unknown): Promise<SaveProfileRes
   try {
     const workspace = await getCurrentWorkspace();
     await db.workspace.update({ where: { id: workspace.id }, data: parsed.data });
+    await logActivity(workspace.id, { type: "profile.updated", actor: "founder", message: "Updated the company profile." });
     return { ok: true, profile: parsed.data };
   } catch (error) {
     console.error("Saving company profile failed:", error);
