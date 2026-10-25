@@ -1,7 +1,8 @@
 # ThePlatform
 The future of business — a plug-and-play AI Business Operating System.
 
-- Architecture & build plan: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+- Architecture upgrade (current plan): [docs/MVP_ARCHITECTURE_UPGRADE.md](docs/MVP_ARCHITECTURE_UPGRADE.md)
+- Original architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Step-by-step guide: [docs/GETTING_STARTED.md](docs/GETTING_STARTED.md)
 
 ## Run it

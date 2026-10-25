@@ -1,5 +1,9 @@
 # ThePlatform — Architecture Proposal (Phase 1 MVP)
 
+> **Superseded in part:** see [MVP_ARCHITECTURE_UPGRADE.md](MVP_ARCHITECTURE_UPGRADE.md) for the
+> audited current state and the upgraded design (Business Brain, workflows, quality gate,
+> goals and outcomes). Steps 0–3 below are built; Steps 4–8 are replaced by the upgrade phases.
+
 > Written for a non-developer. Technical words are explained the first time they appear.
 
 ## 1. The big picture in one paragraph
